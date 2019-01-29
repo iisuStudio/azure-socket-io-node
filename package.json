@@ -1,0 +1,17 @@
+{
+  "name": "azuer-socket-io-node",
+  "version": "1.0.0",
+  "description": "socket io node server",
+  "author": "iisu",
+  "license": "ISC",
+  "repository": "https://github.com/iisuStudio/azure-socket-io-node.git",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "socket.io": "^1.7.3"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
