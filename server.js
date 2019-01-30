@@ -13,39 +13,32 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
-// var dotenv = require('dotenv-extended');
+var dotenv = require('dotenv-extended');
 
 var app = express();
 var server = http.createServer(app);
 var io = socket(server);
 
-// dotenv.load();
+if(process.env.NODE_ENV === 'development') {
+    dotenv.load();
+    app.use(errorHandler());
+    // additional develop environment configuration
+}
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-// app.use(favicon(__dirname + '/public/favicon.ico'));
-// app.use(logger('dev'));
-// app.use(methodOverride());
-// app.use(session({
-//     resave: true,
-//     saveUninitialized: true,
-//     secret: 'uwotm8'
-// }));
+app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(methodOverride());
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: 'uwotm8'
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-// if(process.env.NODE_ENV === 'production') {
-//     app.set('port', 80);
-//     // additional prod environment configuration
-// }
-//
-// if(process.env.NODE_ENV === 'development') {
-//     app.use(errorHandler());
-//     // additional develop environment configuration
-// }
 
 app.get('/', routes.index);
 app.get('/users', user.list);
