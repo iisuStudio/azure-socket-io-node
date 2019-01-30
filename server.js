@@ -20,16 +20,16 @@ var io = socket(server);
 
 if(process.env.NODE_ENV === 'development') {
     require('dotenv-extended').load();
-    app.use(errorHandler());
     // additional develop environment configuration
 }
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.use(errorHandler());
 app.use(favicon(__dirname + '/public/favicon.ico'));
-// app.use(logger('dev'));
-// app.use(methodOverride());
+app.use(logger('dev'));
+app.use(methodOverride());
 // app.use(session({
 //     resave: true,
 //     saveUninitialized: true,
