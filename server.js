@@ -16,7 +16,7 @@ var errorHandler = require('errorhandler');
 // var dotenv = require('dotenv-extended');
 
 var app = express();
-var server = http.Server(app);
+var server = http.createServer(app);
 var io = socket(server);
 
 // dotenv.load();
