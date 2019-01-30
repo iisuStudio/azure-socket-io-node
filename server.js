@@ -13,15 +13,15 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
-var dotenv = require('dotenv-extended');
+// var dotenv = require('dotenv-extended');
 
 var app = express();
 var server = http.Server(app);
 var io = socket(server);
 
-dotenv.load();
+// dotenv.load();
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/favicon.ico'));
