@@ -50,11 +50,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-// io.on('connection', function(socket){
-//     socket.on('chat_message', function(msg){
-//         io.emit('chat_message', msg);
-//     });
-// });
+io.on('connection', function(socket){
+    socket.on('chat_message', function(msg){
+        io.emit('chat_message', msg);
+    });
+});
 
 server.listen(app.get('port'), function(){
     console.log('listening on *:' + app.get('port'));
