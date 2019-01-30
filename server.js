@@ -13,14 +13,13 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
-var dotenv = require('dotenv-extended');
 
 var app = express();
 var server = http.createServer(app);
 var io = socket(server);
 
 if(process.env.NODE_ENV === 'development') {
-    dotenv.load();
+    require('dotenv-extended').load();
     app.use(errorHandler());
     // additional develop environment configuration
 }
