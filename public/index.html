@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/emoji.css">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
     <!-- Title -->
-    <title>Socket.IO chat</title>
+    <title>Durarara! Chat!</title>
     <style>
         * {
             margin: 0;
@@ -63,6 +65,11 @@
 
         body {
             font-size: large
+        }
+
+        .chatroom {
+            margin-top: 5rem;
+            margin-bottom: 10rem;
         }
 
         .dialog {
@@ -123,8 +130,11 @@
     </style>
 </head>
 <body class="bg-dark">
-<div class="container container-fluid my-5">
+<div class="container container-fluid">
     <!-- content -->
+    <div class="chatroom">
+
+    </div>
 </div>
 <form class="p-2" action="">
     <div class="form-group mx-md-5 mb-2 ">
@@ -216,7 +226,7 @@
                             </div>
                         </div>`;
                 }
-                $('.container').append(dom);
+                $('.chatroom').append(dom);
                 window.scrollTo(0, document.body.scrollHeight);
             }
         });
