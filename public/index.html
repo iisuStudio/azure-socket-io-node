@@ -252,6 +252,8 @@
                 }
                 $('.chatroom').append(dom);
                 window.scrollTo(0, document.body.scrollHeight);
+                var audio = new Audio('notification.mp3');
+                audio.play();
             }
         });
     });
