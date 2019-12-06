@@ -32,10 +32,12 @@ var errorHandler = require('errorhandler');
 // ---- SETTING ----
 var app = express();
 
-require('dotenv-extended').load({
-    path: __dirname + '/.env',
-    defaults: __dirname + '/.env.example',
-});
+if (!process.env.NODE_ENV) {
+    require('dotenv-extended').load({
+        path: '.env',
+        defaults: '.env.example',
+    });
+}
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
