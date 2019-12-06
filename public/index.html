@@ -184,9 +184,19 @@
         var socket = io();
         $('form').submit(function () {
             socket.emit('chat_message', uuid + '||' + $('#m').val());
-            $('#m').val("") ;
+            $('#m').val("");
             $('.emoji-wysiwyg-editor').text('');
             return false;
+        });
+        $('.emoji-wysiwyg-editor').on("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                $('#m').val($(this).text());
+                // Trigger the button element with a click
+                $('form').submit()
+            }
         });
         socket.on('chat_message', function (msg) {
             if (msg && msg.split('||')) {
