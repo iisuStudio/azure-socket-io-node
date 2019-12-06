@@ -33,8 +33,8 @@ var errorHandler = require('errorhandler');
 var app = express();
 
 require('dotenv-extended').load({
-    path: '.env',
-    defaults: '.env.example',
+    path: __dirname + '/.env',
+    defaults: __dirname + '/.env.example',
 });
 
 app.set('port', process.env.PORT || 3000);
