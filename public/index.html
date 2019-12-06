@@ -6,34 +6,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/emoji.css">
     <!-- Title -->
     <title>Socket.IO chat</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font: 13px Helvetica, Arial; }
-        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages li { padding: 5px 10px; }
-        #messages li:nth-child(odd) { background: #eee; }
-        #messages { margin-bottom: 40px }
-        .container {
-            font-size: large
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .dialog {
+
+        body {
+            font: 13px Helvetica, Arial;
         }
-        .image-box {
-            height: 100px;
-            width: 100px;
-        }
-        .image-box>img {
+
+        form {
+            background: #000;
+            /*padding: 3px;*/
+            position: fixed;
+            bottom: 0;
             width: 100%;
         }
+
+        /*form input {*/
+        /*border: 0;*/
+        /*padding: 10px;*/
+        /*width: 90%;*/
+        /*margin-right: .5%;*/
+        /*}*/
+
+        /*form button {*/
+        /*width: 9%;*/
+        /*background: rgb(130, 224, 255);*/
+        /*border: none;*/
+        /*padding: 10px;*/
+        /*}*/
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+
+        #messages {
+            margin-bottom: 40px
+        }
+
+        body {
+            font-size: large
+        }
+
+        .dialog {
+            /*margin-bottom: 1.5rem;*/
+        }
+
+        .image-box {
+            min-width: 60px;
+            width: 10%;
+        }
+
+        .image-box > img {
+            max-height: 100px;
+            max-width: 100px;
+            width: 100%;
+        }
+
+        .message-arrow-icon {
+            margin-left: 1rem;
+        }
+
+        .message-arrow-icon > svg {
+            width: 1rem;
+            margin-top: 1rem;
+            overflow: visible;
+        }
+
         .message-box {
             border: #fff 5px solid;
             border-radius: 1rem;
+            padding: 2rem;
         }
+
+        .message {
+
+        }
+
         .track {
             fill: white;
             stroke: white;
@@ -43,55 +109,118 @@
         .track-round {
             stroke-linejoin: round;
         }
+
+        .track-reverse {
+            transform: scale(2, 2) scale(-1, 1);
+        }
+
+        .emoji-wysiwyg-editor {
+            height: 5rem!important;
+        }
+        .emoji-menu {
+            bottom: 5rem;
+        }
     </style>
 </head>
 <body class="bg-dark">
-<ul id="messages"></ul>
-<div class="container ">
+<div class="container container-fluid my-5">
     <!-- content -->
-    <div class="row dialog">
-        <div class="col-2">
-            <div class="image-box p-2">
-
-                <img class="img-thumbnail" src="img/head_icons/1.png" alt="...">
-            </div>
-        </div>
-        <div class="col-10">
-
-            <div class="message-box d-flex bd-highlight bg-info">
-                <svg style="position: absolute; top: 1rem;left: -.3rem;">
-                    <polygon class="track track-round" points="20,5 0,10, 10,15 15,18 17,20 20,25"/>
-                </svg>
-                <div class="p-2 align-items-center">
-                    <div class="m-4 text-light text-monospace">I'm an inline flexbox container!</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
 </div>
-<form action="">
-    <input id="m" autocomplete="off" /><button>Send</button>
+<form class="p-2" action="">
+    <div class="form-group mx-md-5 mb-2 ">
+        <label for="m" class="sr-only">訊息</label>
+        <p class="lead emoji-picker-container">
+            <input class="form-control" title="訊息" placeholder="message..." id="m" data-emojiable="true" autocomplete="off" />
+        </p>
+    </div>
+    <div class="mx-md-5">
+        <button class="btn btn-dark" style="width: 100%">POST!</button>
+    </div>
 </form>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/util.js"></script>
+<script src="js/jquery.emojiarea.js"></script>
+<script src="js/emoji-picker.js"></script>
+<script>
+    $(function() {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+    });
+</script>
 <script>
     $(function () {
+        var rand = function () {
+            return Math.random().toString(36).substr(2); // remove `0.`
+        };
+
+        var token = function () {
+            return rand() + rand(); // to make it longer
+        };
+
+        var uuid = token(); // "bnh5yzdirjinqaorq0ox1tf383nb3xr"
         var socket = io();
-        $('form').submit(function(){
-            socket.emit('chat_message', $('#m').val());
-            $('#m').val('');
+        $('form').submit(function () {
+            socket.emit('chat_message', uuid + '||' + $('#m').val());
+            $('#m').val("") ;
+            $('.emoji-wysiwyg-editor').text('');
             return false;
         });
-        socket.on('chat_message', function(msg){
-            $('#messages').append($('<li>').text(msg));
-            window.scrollTo(0, document.body.scrollHeight);
+        socket.on('chat_message', function (msg) {
+            if (msg && msg.split('||')) {
+                var me = msg.split('||')[0];
+                var text = msg.split('||')[1];
+
+                if (uuid === me) {
+                    var dom = `<div class="d-flex flex-row-reverse bd-highlight dialog">
+                            <div class="image-box">
+                                <img class="img-thumbnail" src="img/head_icons/1.png" alt="...">
+                            </div>
+                            <div class="message-arrow-icon">
+                                <svg>
+                                    <polygon class="track track-round track-reverse" points="20,5 0,10, 10,15 15,18 17,20 20,25"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="message-box bd-highlight bg-info">
+                                    <div class="message text-break text-light text-monospace">${text}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                } else {
+                    var dom = `<div class="d-flex flex-row bd-highlight dialog">
+                            <div class="image-box">
+                                <img class="img-thumbnail" src="img/head_icons/2.png" alt="...">
+                            </div>
+                            <div class="message-arrow-icon">
+                                <svg>
+                                    <polygon class="track track-round" points="20,5 0,10, 10,15 15,18 17,20 20,25"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="message-box bd-highlight bg-info">
+                                    <div class="message text-break text-light text-monospace">${text}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+                $('.container').append(dom);
+                window.scrollTo(0, document.body.scrollHeight);
+            }
         });
     });
 </script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>
