@@ -74,9 +74,9 @@ io.on('connection', function (socket) {
     socket.on('chat_message', function (msg) {
         // io.emit('chat_message', msg);
         hosts = [
-            'iisustudio-socket-io-node:443',
-            'iisustudio-socket-io-node-0:443',
-            'iisustudio-socket-io-node-1:443',
+            'iisustudio-socket-io-node.azurewebsites.net:80',
+            'iisustudio-socket-io-node-0.azurewebsites.net:80',
+            'iisustudio-socket-io-node-1.azurewebsites.net:80',
         ];
         hosts.forEachAsync(function (value, index) {
             console.log(value.split(':'));
