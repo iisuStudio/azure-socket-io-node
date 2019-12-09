@@ -2,6 +2,8 @@
 var http    = require('http');
 var express = require('express');
 var session = require('express-session');
+var Array = require('node-array');
+var querystring = require('querystring');
 
 // ---- ROUTES ----
 var path    = require('path');
@@ -63,10 +65,57 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ---- RENDER FILES ----
 app.use('/web', routes.index);
 app.use('/users', routes.user.list);
+app.post('/wss/message_pool', function (req, res) {
+    io.emit('chat_message', req.body.message);
+    res.send(req.body.message);
+});
 
 io.on('connection', function (socket) {
     socket.on('chat_message', function (msg) {
-        io.emit('chat_message', msg);
+        // io.emit('chat_message', msg);
+        hosts = [
+            'iisustudio-socket-io-node:443',
+            'iisustudio-socket-io-node-0:443',
+            'iisustudio-socket-io-node-1:443',
+        ];
+        hosts.forEachAsync(function (value, index) {
+            console.log(value.split(':'));
+            host = value.split(':');
+            // Build the post string from an object
+            var post_data = querystring.stringify({
+                message: msg,
+            });
+            var post_options = {
+                host: host[0],
+                path: '/wss/message_pool',
+                port: host[1],
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Length': Buffer.byteLength(post_data)
+                }
+            };
+
+            var req = http.request(post_options, function (response) {
+                // response.setEncoding('utf8');
+                var str = '';
+                response.on('data', function (chunk) {
+                    str += chunk;
+                });
+
+                response.on('end', function () {
+                    console.log(str);
+                });
+            });
+            //This is the data we are posting, it needs to be a string or a buffer
+            req.on('error', function (err) {
+                // Handle error
+                console.log(value + " was error!");
+                console.log(err);
+            });
+            req.write(post_data);
+            req.end();
+        })
     });
 });
 
