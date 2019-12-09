@@ -201,9 +201,9 @@
             'https://iisustudio-socket-io-node-1.azurewebsites.net:443',
         ];
         var socket = null;
-        for (var i=0; i<hosts.length; i++) {
+        for (var i=0; i<10; i++) {
             try {
-                socket = io(hosts[i]);
+                socket = io(hosts[getRandomInt(hosts.length)]);
                 break;
             } catch (e) {
 
@@ -271,6 +271,9 @@
             }
         });
     });
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
 </script>
 </body>
 </html>
