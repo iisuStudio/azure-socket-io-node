@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -162,8 +162,7 @@
     </div>
 </form>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="js/config.js"></script>
@@ -196,23 +195,19 @@
 
         var uuid = token(); // "bnh5yzdirjinqaorq0ox1tf383nb3xr"
         //
-        var host = [
-            'iisustudio-socket-io-node.azurewebsites.net:80',
-            'iisustudio-socket-io-node-0.azurewebsites.net:80',
-            'iisustudio-socket-io-node-1.azurewebsites.net:80',
+        var hosts = [
+            'http://iisustudio-socket-io-node.azurewebsites.net:80',
+            'http://iisustudio-socket-io-node-0.azurewebsites.net:80',
+            'http://iisustudio-socket-io-node-1.azurewebsites.net:80',
         ];
-        var socket;
-        try{
-            host.forEach(function (value, index) {
-                try {
-                    socket = io(value);
-                    throw BreakException;
-                } catch (e) {
+        var socket = null;
+        for (var i=0; i<hosts.length; i++) {
+            try {
+                socket = io(hosts[i]);
+                break;
+            } catch (e) {
 
-                }
-            });
-        } catch (e) {
-            if (e !== BreakException) throw e;
+            }
         }
 
         $('form').submit(function () {
