@@ -195,7 +195,26 @@
         };
 
         var uuid = token(); // "bnh5yzdirjinqaorq0ox1tf383nb3xr"
-        var socket = io();
+        //
+        var host = [
+            'iisustudio-socket-io-node.azurewebsites.net:80',
+            'iisustudio-socket-io-node-0.azurewebsites.net:80',
+            'iisustudio-socket-io-node-1.azurewebsites.net:80',
+        ];
+        var socket;
+        try{
+            host.forEach(function (value, index) {
+                try {
+                    socket = io(value);
+                    throw BreakException;
+                } catch (e) {
+
+                }
+            });
+        } catch (e) {
+            if (e !== BreakException) throw e;
+        }
+
         $('form').submit(function () {
             socket.emit('chat_message', uuid + '||' + $('#m').val());
             $('#m').val("");
