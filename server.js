@@ -88,7 +88,7 @@ app.post('/wss/connect_info', function (req, res) {
     var clientsTotal = 0;
     hosts.forEach(function(value, index){
         var item = cache.get(value);
-        var clientsCount = item ? parseInt(item.clientsCount) : 0;
+        clientsCount = item ? parseInt(item.clientsCount) : 0;
         clientsTotal += clientsCount;
     });
     req.body.clientsTotal = clientsTotal;
