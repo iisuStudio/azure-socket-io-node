@@ -7,6 +7,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,400,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- emoji -->
     <link rel="stylesheet" href="css/emoji.css">
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
@@ -20,7 +24,9 @@
         }
 
         body {
-            font: 13px Helvetica, Arial;
+            font-family: "Noto Sans TC", sans-serif;
+            /*font-family: "Roboto";*/
+            font-size: 13px;
         }
 
         form {
@@ -61,6 +67,12 @@
 
         #messages {
             margin-bottom: 40px
+        }
+
+        .chatuser {
+            top: 0;
+            color: white;
+            font-size: 1rem;
         }
 
         .chatroom {
@@ -145,6 +157,7 @@
 </head>
 <body class="bg-dark">
 <div class="container container-fluid">
+    <div class="chatuser">在線人數 : <span>--</span></div>
     <!-- content -->
     <div class="chatroom">
 
@@ -196,10 +209,16 @@
         var uuid = token(); // "bnh5yzdirjinqaorq0ox1tf383nb3xr"
         //
         var hosts = [
-            'https://iisustudio-socket-io-node.azurewebsites.net:443',
-            'https://iisustudio-socket-io-node-0.azurewebsites.net:443',
-            'https://iisustudio-socket-io-node-1.azurewebsites.net:443',
+            // 'https://iisustudio-socket-io-node.azurewebsites.net:443',
+            // 'https://iisustudio-socket-io-node-0.azurewebsites.net:443',
+            // 'https://iisustudio-socket-io-node-1.azurewebsites.net:443',
         ];
+        if(location.host.includes("localhost")) {
+            hosts.push(location.host)
+            // hosts.push("localhost:3000");
+            // hosts.push("localhost:3001");
+            // hosts.push("localhost:3002");
+        }
         var socket = null;
         for (var i=0; i<10; i++) {
             try {
@@ -226,13 +245,18 @@
                 $('form').submit()
             }
         });
-        socket.on('chat_message', function (msg) {
-            if (msg && msg.split('||')) {
-                var me = msg.split('||')[0];
-                var text = msg.split('||')[1];
+        // if(socket) {
+            socket.emit('chat_user', uuid);
+            socket.on('chat_user', function (info) {
+                $('.chatuser>span').html(info.clientsTotal);
+            });
+            socket.on('chat_message', function (msg) {
+                if (msg && msg.split('||')) {
+                    var me = msg.split('||')[0];
+                    var text = msg.split('||')[1];
 
-                if (uuid === me) {
-                    var dom = `<div class="d-flex flex-row-reverse bd-highlight dialog">
+                    if (uuid === me) {
+                        var dom = `<div class="d-flex flex-row-reverse bd-highlight dialog">
                             <div class="image-box">
                                 <img class="img-thumbnail" src="img/head_icons/1.png" alt="...">
                             </div>
@@ -243,12 +267,12 @@
                             </div>
                             <div>
                                 <div class="message-box bd-highlight bg-info">
-                                    <div class="message text-break text-light text-monospace">${text}</div>
+                                    <div class="message text-break text-light">${text}</div>
                                 </div>
                             </div>
                         </div>`;
-                } else {
-                    var dom = `<div class="d-flex flex-row bd-highlight dialog">
+                    } else {
+                        var dom = `<div class="d-flex flex-row bd-highlight dialog">
                             <div class="image-box">
                                 <img class="img-thumbnail" src="img/head_icons/2.png" alt="...">
                             </div>
@@ -259,17 +283,18 @@
                             </div>
                             <div>
                                 <div class="message-box bd-highlight bg-info">
-                                    <div class="message text-break text-light text-monospace">${text}</div>
+                                    <div class="message text-break text-light">${text}</div>
                                 </div>
                             </div>
                         </div>`;
+                    }
+                    $('.chatroom').append(dom);
+                    window.scrollTo(0, document.body.scrollHeight);
+                    var audio = new Audio('notification.mp3');
+                    audio.play();
                 }
-                $('.chatroom').append(dom);
-                window.scrollTo(0, document.body.scrollHeight);
-                var audio = new Audio('notification.mp3');
-                audio.play();
-            }
-        });
+            });
+        // }
     });
     function getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));
