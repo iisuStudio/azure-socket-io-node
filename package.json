@@ -23,7 +23,7 @@
     "node-file-cache": "^1.0.2",
     "querystring": "^0.2.0",
     "serve-favicon": "^2.5.0",
-    "socket.io": "^1.7.3"
+    "socket.io": "^2.4.0"
   },
   "scripts": {
     "start": "node server.js",
